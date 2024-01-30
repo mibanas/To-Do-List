@@ -10,16 +10,17 @@
     "mongoose": "^8.1.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-router-dom": "^6.21.3",
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
     "dev:back": "nodemon ./server/server.js",
-    "dev:front": "react-scripts start",
+    "dev:front": "react-scripts start ",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "dev": "concurrently \"npm run dev:front\" \"npm run dev:back\""
+    "dev": "concurrently \"npm run dev:back\" \"npm run dev:front\""
   },
   "eslintConfig": {
     "extends": [
@@ -42,6 +43,7 @@
   "devDependencies": {
     "concurrently": "^8.2.2",
     "dotenv": "^16.4.1",
-    "nodemon": "^3.0.3"
+    "nodemon": "^3.0.3",
+    "tailwindcss": "^3.4.1"
   }
 }
