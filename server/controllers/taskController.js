@@ -1,5 +1,4 @@
-const modelTask = require('../models/taskModel')
-
+const modelTask = require("../models/taskModel");
 
 exports.addTask = async (req, res) => {
     const { title, description, priority, user_id } = req.body;
@@ -22,4 +21,17 @@ exports.addTask = async (req, res) => {
             error: 'Erreur lors de l\'ajout de la tâche. Veuillez réessayer.',
         });
     }
+};
+
+exports.getAll = async (req, res) => {
+  try {
+    const tasks = await modelTask.find();
+    res.status(200).send(tasks);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
 };
