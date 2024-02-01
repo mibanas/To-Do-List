@@ -31,7 +31,7 @@ const Sidebare = () => {
             <p className="mb-4">Sanabi</p>
           </div>
 
-          <Sidebar.ItemGroup>
+          <Sidebar.ItemGroup className="ml-14 mt-12">
             <Sidebar.Item icon={HiChartPie}>
               <Link to={"/"}>Backlog</Link>
             </Sidebar.Item>

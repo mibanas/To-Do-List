@@ -2,12 +2,14 @@
 module.exports = {
   content: [
     "./src/**/*.{js,jsx,ts,tsx}",
-    'node_modules/flowbite-react/lib/esm/**/*.js',
+    "node_modules/flowbite-react/lib/esm/**/*.js",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        customBlue: "#0E7490",
+      },
+    },
   },
-  plugins: [
-    require('flowbite/plugin'),
-  ],
-}
+  plugins: [require("flowbite/plugin")],
+};
