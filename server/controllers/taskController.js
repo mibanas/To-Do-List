@@ -42,8 +42,6 @@ exports.getAll = async (req, res) => {
 exports.updateTask = async (req, res) => {
   const { id } = req.params;
   const { title, description, priority } = req.body;
-  //   console.log("jjmjjmjmj");
-  //   return res.json(req.body);
   try {
     const updatedTask = await modelTask.findByIdAndUpdate(
       id,
