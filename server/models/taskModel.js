@@ -30,7 +30,6 @@ const schemaTask = mongoose.Schema(
         deadline: {
             type: Date,
             required: true,
-            default: Date.now,
         },
         finiching_date: {
             type: Date,

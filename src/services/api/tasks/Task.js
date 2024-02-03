@@ -29,3 +29,12 @@ export const changeStatusById = async (taskId) => {
     throw error;
   }
 }
+
+export const addTask = (req, res) => {
+  try {
+    const { title, description, priority, deadline } = req.body 
+    
+  } catch (error) {
+    
+  }
+}
