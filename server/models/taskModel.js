@@ -24,8 +24,17 @@ const schemaTask = mongoose.Schema(
         },
         creation_date: {
             type: Date,
-            required: false,
+            required: true,
             default: Date.now,
+        },
+        deadline: {
+            type: Date,
+            required: true,
+            default: Date.now,
+        },
+        finiching_date: {
+            type: Date,
+            required: false,
         },
         is_deleted: {
             type: Boolean,

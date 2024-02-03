@@ -9,6 +9,7 @@ module.exports = {
       colors: {
         customBlue: "#0E7490",
       },
+
     },
   },
   plugins: [require("flowbite/plugin")],
