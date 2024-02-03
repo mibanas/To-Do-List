@@ -1,8 +1,6 @@
 import React from 'react'
 import { Badge } from 'flowbite-react';
-import useTask from '../../hooks/tasks/useTask';
-import { useEffect } from 'react';
-import { format, differenceInDays } from 'date-fns';
+import { format, differenceInDays, differenceInHours } from 'date-fns';
 import './scroll.css' 
 import { deleteTaskById, changeStatusById } from '../../services/api/tasks/Task';
 
@@ -107,13 +105,13 @@ const TaskCard = ({ taskType, allTasks, loadTasks }) => {
                         <div class="flex flex-wrap gap-2 pb-2">
                             { taskType !== "Done" &&
                                 <>
-                                    <Badge color="indigo">Start at : {format(new Date(task.creation_date), 'dd/MM/yyyy')}</Badge>
-                                    <Badge color="indigo">Deadline : {format(new Date(task.deadline), 'dd/MM/yyyy')}</Badge>
-                                    <Badge color="pink">you have : {differenceInDays(task.creation_date, task.deadline)} days left</Badge>
+                                    <Badge color="indigo">Start at : {format(new Date(task.creation_date), 'dd/MM/yyyy HH:mm')}</Badge>
+                                    <Badge color="indigo">Deadline : {format(new Date(task.deadline), 'dd/MM/yyyy HH:mm')}</Badge>
+                                    <Badge color="pink">you have : {differenceInDays(task.creation_date, task.deadline)} days left and {differenceInHours(task.creation_date, task.deadline)}</Badge>
                                 </>
                             }
                             { taskType === "Done" &&
-                                <Badge color="success">Finiched at : {format(new Date(task.deadline), 'dd/MM/yyyy')}</Badge>
+                                <Badge color="success">Finiched at : {format(new Date(task.finiching_date || null), 'dd/MM/yyyy HH:mm')}</Badge>
                             }
                         </div>
                     
@@ -132,11 +130,13 @@ const TaskCard = ({ taskType, allTasks, loadTasks }) => {
                                     </svg>
                                 </button>
                             }
-									 <button>
-										<svg class="w-[30px] h-[30px] text-white dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
-											<path fill-rule="evenodd" d="M15.5 3.3a1 1 0 0 0-1.4 0l-2 2h.1l6.5 6.5 2-1.9c.4-.4.4-1 0-1.4l-5.2-5.2ZM7 8.3l3.9-1.5 6.3 6.3-1.5 3.9a1 1 0 0 1-.6.6l-9.5 3.3a1 1 0 0 1-1-.1l6.5-6.5A1 1 0 0 0 9.7 13l-6.5 6.4a1 1 0 0 1-.1-1L6.4 9c.1-.3.3-.5.6-.6Z" clip-rule="evenodd"/>
-										</svg>
-									 </button>
+									{	taskType !== "Done" &&
+										<button >
+											<svg class="w-[30px] h-[30px] text-white dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+												<path fill-rule="evenodd" d="M15.5 3.3a1 1 0 0 0-1.4 0l-2 2h.1l6.5 6.5 2-1.9c.4-.4.4-1 0-1.4l-5.2-5.2ZM7 8.3l3.9-1.5 6.3 6.3-1.5 3.9a1 1 0 0 1-.6.6l-9.5 3.3a1 1 0 0 1-1-.1l6.5-6.5A1 1 0 0 0 9.7 13l-6.5 6.4a1 1 0 0 1-.1-1L6.4 9c.1-.3.3-.5.6-.6Z" clip-rule="evenodd"/>
+											</svg>
+										</button>
+									 }
 									 { 
 										<button onClick={() => handleDeleteTask(task._id)}>
 											<svg class="w-[30px] h-[30px] text-[#FFFFFF] dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

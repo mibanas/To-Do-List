@@ -1,13 +1,14 @@
 const modelTask = require("../models/taskModel");
 
 exports.addTask = async (req, res) => {
-	const { title, description, priority, user_id } = req.body;
+	const { title, description, priority,deadline } = req.body;
 	try {
 		const newTask = await modelTask.create({
 		title,
 		description,
 		priority,
-		user_id,
+		deadline,
+		user_id : '65b8de064a05a780a4a18cc9',
 		});
 
 		return res.status(201).json({
@@ -79,8 +80,6 @@ exports.changeStatus = async (req, res) => {
       });
     }
 
-    console.log(task.task_status);
-
     if (task.task_status === 'To Do') {
       const updateStatus = await modelTask.findByIdAndUpdate(
         {
@@ -103,6 +102,7 @@ exports.changeStatus = async (req, res) => {
         },
         {
           task_status: 'Done',
+		  finiching_date : new Date()
         },
         { new: true }
       );
