@@ -2,9 +2,21 @@ import React from "react";
 import { Button, Modal, Table } from "flowbite-react";
 import { useState } from "react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
+import useTask from "../../hooks/tasks/useTask";
+import { deleteTaskById } from "../../services/api/tasks/Task";
 
 function TaskList() {
   const [openModal, setOpenModal] = useState(false);
+  const { tasks, loadTasks } = useTask();
+
+  const handleDeleteTask = async (taskId) => {
+    try {
+      await deleteTaskById(taskId);
+      loadTasks();
+    } catch (error) {
+      console.error("Error deleting task:", error.message);
+    }
+  };
 
   return (
     <>
@@ -23,108 +35,107 @@ function TaskList() {
             </Table.HeadCell>
           </Table.Head>
           <Table.Body className="divide-y text-center">
-            <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-              <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                {"Ajouter les function de CRUD"}
-              </Table.Cell>
-              <Table.Cell>utiliser la method axios pour cet tache</Table.Cell>
-              <Table.Cell>to do</Table.Cell>
-              <Table.Cell>Hight</Table.Cell>
-              <Table.Cell className="flex ml-10">
-                <Button
-                  onClick={() => setOpenModal(true)}
-                  className="bg-inherit"
-                >
-                  <svg
-                    className="w-6 h-6 text-gray-800 dark:text-white"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M8 18V6l8 6-8 6Z"
-                    />
-                  </svg>
-                </Button>
-                <Button
-                  onClick={() => setOpenModal(true)}
-                  className="bg-inherit"
-                >
-                  <svg
-                    className="w-6 h-6 text-sky-500 dark:text-white"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="m14.3 4.8 2.9 2.9M7 7H4a1 1 0 0 0-1 1v10c0 .6.4 1 1 1h11c.6 0 1-.4 1-1v-4.5m2.4-10a2 2 0 0 1 0 3l-6.8 6.8L8 14l.7-3.6 6.9-6.8a2 2 0 0 1 2.8 0Z"
-                    />
-                  </svg>
-                </Button>
+            {tasks.map((task) => (
+              <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                  {task.title}
+                </Table.Cell>
+                <Table.Cell>{task.description}</Table.Cell>
+                <Table.Cell>{task.task_status}</Table.Cell>
+                <Table.Cell>{task.priority}</Table.Cell>
+                <Table.Cell className="flex ml-10">
+                  <Button className="bg-inherit">
+                    <svg
+                      className="w-6 h-6 text-gray-800 dark:text-white"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M8 18V6l8 6-8 6Z"
+                      />
+                    </svg>
+                  </Button>
+                  <Button className="bg-inherit">
+                    <svg
+                      className="w-6 h-6 text-sky-500 dark:text-white"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="m14.3 4.8 2.9 2.9M7 7H4a1 1 0 0 0-1 1v10c0 .6.4 1 1 1h11c.6 0 1-.4 1-1v-4.5m2.4-10a2 2 0 0 1 0 3l-6.8 6.8L8 14l.7-3.6 6.9-6.8a2 2 0 0 1 2.8 0Z"
+                      />
+                    </svg>
+                  </Button>
 
-                <Button
-                  onClick={() => setOpenModal(true)}
-                  className="bg-inherit"
-                >
-                  {" "}
-                  <svg
-                    className="w-6 h-6 text-red-500 dark:text-white"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
+                  <Button
+                    onClick={() => setOpenModal(true)}
+                    className="bg-inherit"
                   >
-                    <path
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"
-                    />
-                  </svg>
-                </Button>
-                <Modal
-                  show={openModal}
-                  size="md"
-                  onClose={() => setOpenModal(false)}
-                  popup
-                >
-                  <Modal.Header />
-                  <Modal.Body>
-                    <div className="text-center">
-                      <HiOutlineExclamationCircle className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
-                      <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-                        Are you sure you want to delete this product?
-                      </h3>
-                      <div className="flex justify-center gap-4">
-                        <Button
-                          color="failure"
-                          onClick={() => setOpenModal(false)}
-                        >
-                          {"Yes, I'm sure"}
-                        </Button>
-                        <Button
-                          color="gray"
-                          onClick={() => setOpenModal(false)}
-                        >
-                          No, cancel
-                        </Button>
+                    {" "}
+                    <svg
+                      className="w-6 h-6 text-red-500 dark:text-white"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"
+                      />
+                    </svg>
+                  </Button>
+                  <Modal
+                    show={openModal}
+                    size="md"
+                    onClose={() => setOpenModal(false)}
+                    popup
+                  >
+                    <Modal.Header />
+                    <Modal.Body>
+                      <div className="text-center">
+                        <HiOutlineExclamationCircle className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
+                        <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+                          Are you sure you want to delete this Task?
+                        </h3>
+                        <div className="flex justify-center gap-4">
+                          <Button
+                            color="failure"
+                            onClick={() => {
+                              setOpenModal(false);
+                              handleDeleteTask(task._id);
+                            }}
+                          >
+                            {"Yes, I'm sure"}
+                          </Button>
+                          <Button
+                            color="gray"
+                            onClick={() => setOpenModal(false)}
+                          >
+                            No, cancel
+                          </Button>
+                        </div>
                       </div>
-                    </div>
-                  </Modal.Body>
-                </Modal>
-              </Table.Cell>
-            </Table.Row>
+                    </Modal.Body>
+                  </Modal>
+                </Table.Cell>
+              </Table.Row>
+            ))}
           </Table.Body>
         </Table>
       </div>

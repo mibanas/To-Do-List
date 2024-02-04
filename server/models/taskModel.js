@@ -1,6 +1,7 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const schemaTask = mongoose.Schema(
+
     {
         title: {
             type: String,
@@ -48,6 +49,6 @@ const schemaTask = mongoose.Schema(
     { timestamps: true }
 );
 
-const modelTask = mongoose.model('Tasks', schemaTask);
+const modelTask = mongoose.model("Tasks", schemaTask);
 
 module.exports = modelTask;
