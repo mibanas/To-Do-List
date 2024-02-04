@@ -1,15 +1,40 @@
-import React from 'react'
+import React, { useState } from 'react';
 import { Datepicker } from 'flowbite-react';
+import { addTask } from '../../services/api/tasks/Task';
 
-const KanbanTaskFom = ({ isOpen, onClose }) => {
-    if (!isOpen) return null;
+const KanbanTaskFom = ({ isOpen, onClose, loadTasks }) => {
 
-	const handleFormSubmit = (event) => {
-		// Handle form submission logic here
+	const [formData, setFormData] = useState({
+		title: '',
+		description: '',
+		deadline: new Date(),
+		priority: 'Low',
+	  });
+
+	  if (!isOpen) return null;
+	
+	  const handleInputChange = (event) => {
+		const { name, value } = event.target;
+		setFormData({ ...formData, [name]: value });
+	  };
+	
+	  const handleFormSubmit = async (event) => {
 		event.preventDefault();
-		// You can collect form data and send it to the server
-		// For example, you might use fetch or axios to make a POST request
-		// with the form data to the server
+
+		try {
+	
+		  const response = await addTask(formData);
+	
+		  if (response.success) {
+			console.log('Tâche ajoutée avec succès :', response.data);
+			onClose()
+			loadTasks()
+		  } else {
+			console.error('Erreur lors de l\'ajout de la tâche :', response.error);
+		  }
+		} catch (error) {
+		  console.error('Erreur lors de la requête POST :', error);
+		}
 	  };
 
 	return (
@@ -25,6 +50,7 @@ const KanbanTaskFom = ({ isOpen, onClose }) => {
 						<input
 							type="text"
 							id="title"
+							onChange={handleInputChange}
 							name="title"
 							className="mt-1 p-2 border rounded-md w-full"
 							required
@@ -37,6 +63,7 @@ const KanbanTaskFom = ({ isOpen, onClose }) => {
 					<textarea
 						id="description"
 						name="description"
+						onChange={handleInputChange}
 						rows="3"
 						className="mt-1 p-2 border rounded-md w-full"
 						required
@@ -49,6 +76,7 @@ const KanbanTaskFom = ({ isOpen, onClose }) => {
 					<Datepicker
 						id="deadline"
 						name="deadline"
+						onChange={handleInputChange}
 						className="mt-1 rounded-md w-full"
 						defaultValue={new Date()}
 						// Add necessary props for date picking, such as onChange
@@ -62,8 +90,8 @@ const KanbanTaskFom = ({ isOpen, onClose }) => {
 							id="priority"
 							name="priority"
 							className="mt-1 p-2 border rounded-md w-full"
-							// value={priority}
-							// onChange={(e) => setPriority(e.target.value)}
+							value={formData.priority}
+							onChange={handleInputChange}
 						>
 							<option value="Low">Low</option>
 							<option value="Medium">Medium</option>
@@ -71,7 +99,7 @@ const KanbanTaskFom = ({ isOpen, onClose }) => {
 						</select>
 					</div>
 					<div className="flex justify-end">
-					<button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700">
+					<button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700" >
 						Add Task
 					</button>
 					<button type="button" className="ml-2 text-gray-500" onClick={onClose}>

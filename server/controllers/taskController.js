@@ -2,6 +2,8 @@ const modelTask = require("../models/taskModel");
 
 exports.addTask = async (req, res) => {
 	const { title, description, priority,deadline } = req.body;
+
+
 	try {
 		const newTask = await modelTask.create({
 		title,
@@ -41,30 +43,44 @@ exports.getAll = async (req, res) => {
 	};
 
 	exports.updateTask = async (req, res) => {
-	const { id } = req.params;
-	const { title, description, priority } = req.body;
-	try {
-		const updatedTask = await modelTask.findByIdAndUpdate(
-		id,
-		{
-			title,
-			description,
-			priority,
-		},
-		{ new: true }
-		);
-		return res.status(200).json({
-		success: true,
-		data: updatedTask,
-		message: "La tâche a été modifiée avec succès.",
-		});
-	} catch (error) {
-		return res.status(500).json({
-		success: false,
-		error: "Erreur lors de la modification de la tâche. Veuillez réessayer.",
-		});
-	}
-};
+		const { id } = req.params;
+		const { title, description, priority, deadline } = req.body;
+	  
+		const updatedData = {};
+	  
+		if (title) {
+		  updatedData.title = title;
+		}
+		if (description) {
+		  updatedData.description = description;
+		}
+		if (priority) {
+		  updatedData.priority = priority;
+		}
+		if (deadline) {
+			updatedData.deadline = deadline;
+		  }
+	  
+		try {
+		  const updatedTask = await modelTask.findByIdAndUpdate(
+			id,
+			updatedData,
+			{ new: true }
+		  );
+	  
+		  return res.status(200).json({
+			success: true,
+			data: updatedTask,
+			message: "La tâche a été modifiée avec succès.",
+		  });
+		} catch (error) {
+		  return res.status(500).json({
+			success: false,
+			error: "Erreur lors de la modification de la tâche. Veuillez réessayer.",
+		  });
+		}
+	  };
+	  
 
 exports.changeStatus = async (req, res) => {
   const { id } = req.params;
