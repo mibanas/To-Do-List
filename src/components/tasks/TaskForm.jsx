@@ -9,14 +9,51 @@ import {
   Datepicker,
 } from "flowbite-react";
 import { useState } from "react";
+import { addTask } from "../../services/api/tasks/Task";
 
-function TaskForm() {
+function TaskForm({ loadTasks }) {
   const [openModal, setOpenModal] = useState(false);
-  const [task, setTask] = useState("");
-  function onCloseModal() {
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [priority, setPriority] = useState("Low");
+  const [deadline, setDeadline] = useState(new Date());
+
+  const onCloseModal = () => {
     setOpenModal(false);
-    setTask("");
-  }
+    setTitle("");
+    setDescription("");
+    setPriority("Low");
+    setDeadline(new Date());
+  };
+
+  const handleAddTask = async () => {
+    try {
+      await addTask({
+        title: title,
+        description: description,
+        priority: priority,
+        deadline: deadline.toISOString(),
+      });
+
+      loadTasks();
+      onCloseModal();
+    } catch (error) {
+      console.error("Error adding task:", error.message);
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        console.error("Response data:", error.response.data);
+        console.error("Response status:", error.response.status);
+        console.error("Response headers:", error.response.headers);
+      } else if (error.request) {
+        // The request was made but no response was received
+        console.error("No response received:", error.request);
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.error("Request setup error:", error.message);
+      }
+    }
+  };
+
   return (
     <>
       <Button
@@ -34,12 +71,12 @@ function TaskForm() {
             </h3>
             <div>
               <div className="mb-2 block">
-                <Label htmlFor="text" value="Title" />
+                <Label value="Title" />
               </div>
               <TextInput
                 id="title"
-                value={task}
-                onChange={(event) => setTask(event.target.value)}
+                value={title}
+                onChange={(event) => setTitle(event.target.value)}
                 required
               />
             </div>
@@ -47,13 +84,24 @@ function TaskForm() {
               <div className="mb-2 block">
                 <Label htmlFor="text" value="Description" />
               </div>
-              <Textarea id="description" type="text" required />
+              <Textarea
+                id="description"
+                value={description}
+                onChange={(event) => setDescription(event.target.value)}
+                type="text"
+                required
+              />
             </div>
             <div className="max-w-md">
               <div className="mb-2 block">
                 <Label htmlFor="priority" value="Priority" />
               </div>
-              <Select id="countries" required>
+              <Select
+                id="priority"
+                value={priority}
+                onChange={(event) => setPriority(event.target.value)}
+                required
+              >
                 <option>Low</option>
                 <option>Medium</option>
                 <option>High</option>
@@ -62,9 +110,13 @@ function TaskForm() {
             <div className="mb-2 block">
               <Label htmlFor="date" value="Duree" />
             </div>
-            <Datepicker />
+            <Datepicker
+              id="deadline"
+              selected={deadline}
+              onChange={(date) => setDeadline(date)}
+            />
             <div className="w-full">
-              <Button>Add</Button>
+              <Button onClick={handleAddTask}>Add</Button>
             </div>
           </div>
         </Modal.Body>
