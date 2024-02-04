@@ -3,7 +3,7 @@ import { Button, Modal, Table } from "flowbite-react";
 import { useState } from "react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import useTask from "../../hooks/tasks/useTask";
-import { deleteTaskById } from "../../services/api/tasks/Task";
+import { deleteTaskById, addTask } from "../../services/api/tasks/Task";
 
 function TaskList() {
   const [openModal, setOpenModal] = useState(false);

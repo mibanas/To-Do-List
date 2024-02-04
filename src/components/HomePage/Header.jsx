@@ -7,13 +7,15 @@ function Header() {
   return (
     <>
       <Navbar fluid rounded className="flex">
-        <Navbar.Brand href="https://flowbite-react.com">
-          <img
-            src={logo}
-            className="mr-3 h-6 sm:h-9"
-            alt="Flowbite React Logo"
-          />
-        </Navbar.Brand>
+        <div>
+          <Navbar.Brand href="https://flowbite-react.com">
+            <img
+              src={logo}
+              className="mr-3 h-6 sm:h-9"
+              alt="Flowbite React Logo"
+            />
+          </Navbar.Brand>
+        </div>
         <div className="flex md:order-2">
           <Link to={"/register"}>
             <Button>Register</Button>
