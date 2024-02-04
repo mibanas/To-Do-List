@@ -8,11 +8,15 @@ import { deleteTaskById } from "../../services/api/tasks/Task";
 function TaskList() {
   const [openModal, setOpenModal] = useState(false);
   const { tasks, loadTasks } = useTask();
+  const [taskIdToDelete, setTaskIdToDelete] = useState(null);
 
-  const handleDeleteTask = async (taskId) => {
+  const handleDeleteTask = async () => {
     try {
-      await deleteTaskById(taskId);
-      loadTasks();
+      if (taskIdToDelete) {
+        await deleteTaskById(taskIdToDelete);
+        loadTasks();
+        setOpenModal(false);
+      }
     } catch (error) {
       console.error("Error deleting task:", error.message);
     }
@@ -36,11 +40,12 @@ function TaskList() {
           </Table.Head>
           <Table.Body className="divide-y text-center">
             {tasks.map((task) => (
+              
               <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
                 <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                   {task.title}
                 </Table.Cell>
-                <Table.Cell>{task.description}</Table.Cell>
+                <Table.Cell>{task.des}</Table.Cell>
                 <Table.Cell>{task.task_status}</Table.Cell>
                 <Table.Cell>{task.priority}</Table.Cell>
                 <Table.Cell className="flex ml-10">
@@ -80,7 +85,10 @@ function TaskList() {
                   </Button>
 
                   <Button
-                    onClick={() => setOpenModal(true)}
+                    onClick={() => {
+                      setTaskIdToDelete(task._id);
+                      setOpenModal(true);
+                    }}
                     className="bg-inherit"
                   >
                     {" "}
@@ -117,7 +125,6 @@ function TaskList() {
                           <Button
                             color="failure"
                             onClick={() => {
-                              setOpenModal(false);
                               handleDeleteTask(task._id);
                             }}
                           >
