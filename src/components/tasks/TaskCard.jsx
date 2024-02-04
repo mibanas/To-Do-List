@@ -1,4 +1,3 @@
-
 import React , { useState } from 'react'
 import { Badge } from 'flowbite-react';
 import { format, differenceInDays, differenceInHours } from 'date-fns';
@@ -38,8 +37,6 @@ const  TaskCard = ({ taskType, allTasks, loadTasks }) => {
         medium : "warning",
         high : "failure"
     }
-  };
-
 
 	const getPriorityColor = (priority) => {
 		switch (priority) {
@@ -54,25 +51,24 @@ const  TaskCard = ({ taskType, allTasks, loadTasks }) => {
 		}
 	};
 
-  const getPriorityColor = (priority) => {
-    switch (priority) {
-      case "Low":
-        return colorPriority.low;
-      case "Medium":
-        return colorPriority.medium;
-      case "High":
-        return colorPriority.high;
-      default:
-        return "info";
+    const cardColor = {
+        doit : "#3652AD",
+        inprogress : "#D83F31",
+        done : "#17594A"
     }
-  };
 
-  const cardColor = {
-    doit: "#3652AD",
-    inprogress: "#D83F31",
-    done: "#17594A",
-  };
-
+	 const getCardColor = (taskType) => {
+		switch (taskType) {
+			case 'To Do':
+			  return cardColor.doit;
+			case 'In Progress':
+			  return cardColor.inprogress;
+			case 'Done':
+			  return cardColor.done;
+			default:
+			  return '#3652AD'; 
+		 }
+	 };
 
 	const openPopUp = () => {
 		setPopUpOpen(true);
@@ -82,19 +78,28 @@ const  TaskCard = ({ taskType, allTasks, loadTasks }) => {
 		setPopUpOpen(false);
 	};
 
-  const handleChangeStatus = async (taskId) => {
-    try {
-      await changeStatusById(taskId);
-      loadTasks();
-    } catch (error) {
-      console.error("Error deleting task:", error.message);
-    }
-  };
+	 const handleDeleteTask = async (taskId) => {
+		try {
+		  await deleteTaskById(taskId);
+		  loadTasks();
+		} catch (error) {
+		  console.error('Error deleting task:', error.message);
+		}
+	 };
 
-  const tasksToDoData = allTasks.filter((task) => {
-    return task.task_status === taskType;
-  });
+	 const handleChangeStatus = async (taskId) => {
+		try {
+		  await changeStatusById(taskId);
+		  loadTasks();
+		} catch (error) {
+		  console.error('Error deleting task:', error.message);
+		}
+	 };
 
+    const tasksToDoData = allTasks.filter(task => {
+        return task.task_status === taskType;
+    });
+      
   return (
     // <div class="bg-[#3652AD] rounded-xl p-5">
     // <div className={`bg-[${status.inprogress}] rounded-xl p-5`}>
@@ -167,4 +172,4 @@ const  TaskCard = ({ taskType, allTasks, loadTasks }) => {
   )
 }
 
-export default TaskCard;
+export default TaskCard

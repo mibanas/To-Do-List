@@ -9,7 +9,7 @@ import Home from "./pages/Home";
 function App() {
   return (
     <div className="flex">
-      <div className="">{/* <Sidebare /> */}</div>
+      <div className=""><Sidebare /></div>
       {/* className="w-10/12 p-4 h-screen" */}
       <div>
         <Routes>
