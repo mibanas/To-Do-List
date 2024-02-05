@@ -127,7 +127,7 @@ const  TaskCard = ({ taskType, allTasks, loadTasks }) => {
                                 <>
                                     <Badge color="indigo">Start at : {format(new Date(task.creation_date), 'dd/MM/yyyy HH:mm')}</Badge>
                                     <Badge color="indigo">Deadline : {format(new Date(task.deadline), 'dd/MM/yyyy HH:mm')}</Badge>
-                                    <Badge color="pink">you have : {differenceInDays(task.creation_date, task.deadline)} days left and {differenceInHours(task.creation_date, task.deadline)}</Badge>
+                                    <Badge color="pink">you have : {differenceInDays(task.creation_date, task.deadline)} Days to finish</Badge>
                                 </>
                             }
                             { taskType === "Done" &&
