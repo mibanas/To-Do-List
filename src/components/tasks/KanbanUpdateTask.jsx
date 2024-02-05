@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Datepicker, TextInput } from 'flowbite-react';
+import { TextInput } from 'flowbite-react';
 import { addTask, updateTask } from '../../services/api/tasks/Task';
 
 const KanbanUpdateTask = ({ isOpen, onClose, loadTasks, selectedTask }) => {
