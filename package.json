@@ -27,7 +27,7 @@
     "dev:back": "nodemon ./server/server.js",
     "dev:front": "react-scripts start ",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "jest",
     "eject": "react-scripts eject",
     "dev": "concurrently \"npm run dev:back\" \"npm run dev:front\""
   },
@@ -52,6 +52,7 @@
   "devDependencies": {
     "concurrently": "^8.2.2",
     "dotenv": "^16.4.1",
+    "jest": "^27.5.1",
     "nodemon": "^3.0.3",
     "tailwindcss": "^3.4.1"
   }

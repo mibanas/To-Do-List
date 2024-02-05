@@ -60,7 +60,7 @@ exports.getAll = async (req, res) => {
 		if (deadline) {
 			updatedData.deadline = deadline;
 		  }
-	  
+		  console.log(updatedData);
 		try {
 		  const updatedTask = await modelTask.findByIdAndUpdate(
 			id,
