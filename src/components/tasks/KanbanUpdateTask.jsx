@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Datepicker } from 'flowbite-react';
+import { Datepicker, TextInput } from 'flowbite-react';
 import { addTask, updateTask } from '../../services/api/tasks/Task';
 
 const KanbanUpdateTask = ({ isOpen, onClose, loadTasks, selectedTask }) => {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    deadline: new Date(),
+    deadline: '',
     priority: 'Low',
   });
 
   useEffect(() => {
+    console.log(selectedTask.deadline);
     if (selectedTask) {
       setFormData({
         title: selectedTask.title || '',
@@ -23,17 +24,26 @@ const KanbanUpdateTask = ({ isOpen, onClose, loadTasks, selectedTask }) => {
 
   if (!isOpen) return null;
 
+  const handleInputDate = (event) =>  {
+    console.log(event.target.value);
+    const { name, value } = event.target;
+    setFormData({ ...formData, [name]: new Date(value) });
+    console.log('formData ', formData);
+  }
+
   const handleInputChange = (event) => {
+    console.log(event.target.value);
     const { name, value } = event.target;
     setFormData({ ...formData, [name]: value });
   };
 
   const handleFormSubmit = async (event) => {
+    console.log('icic : ', formData);
     event.preventDefault();
 
     try {
       if (selectedTask) {
-        const response = await updateTask(selectedTask.id, formData);
+        const response = await updateTask(selectedTask._id, formData);
 
         if (response.success) {
           console.log('Tâche mise à jour avec succès :', response.data);
@@ -75,7 +85,7 @@ const KanbanUpdateTask = ({ isOpen, onClose, loadTasks, selectedTask }) => {
               name="title"
               className="mt-1 p-2 border rounded-md w-full"
               required
-              value={selectedTask._id}
+              value={formData.title}
             />
           </div>
           <div className="mb-4">
@@ -89,22 +99,23 @@ const KanbanUpdateTask = ({ isOpen, onClose, loadTasks, selectedTask }) => {
               rows="3"
               className="mt-1 p-2 border rounded-md w-full"
               required
-              value={selectedTask.description}
+              value={formData.description}
             ></textarea>
           </div>
-          <div className="mb-4">
-            <label htmlFor="deadline" className="block text-sm font-medium text-gray-600">
-              Date limite :
-            </label>
-            <Datepicker
-              id="deadline"
-              name="deadline"
-              onChange={handleInputChange}
-              className="mt-1 rounded-md w-full"
-              defaultValue={selectedTask.deadline}
-              // Ajouter les propriétés nécessaires pour la sélection de la date, telles que onChange
-            />
-          </div>
+            <div className="mb-4">
+                <label htmlFor="deadline" className="block text-sm font-medium text-gray-600">
+                    Dead:
+                </label>
+                <TextInput
+                    type="date"
+                    id="deadline"
+                    name="deadline"
+                    value={formData.deadline.toISOString().split('T')[0]}  
+                    onChange={handleInputDate}  
+                    className="mt-1 rounded-md w-full"
+         
+                />
+            </div>
           <div className="mb-4">
             <label htmlFor="priority" className="block text-sm font-medium text-gray-600">
               Priorité :
@@ -113,20 +124,20 @@ const KanbanUpdateTask = ({ isOpen, onClose, loadTasks, selectedTask }) => {
               id="priority"
               name="priority"
               className="mt-1 p-2 border rounded-md w-full"
-              value={selectedTask.priority}
+              value={formData.priority}
               onChange={handleInputChange}
             >
-              <option value="Low">Faible</option>
-              <option value="Medium">Moyenne</option>
-              <option value="High">Élevée</option>
+    			    <option value="Low">Low</option>
+							<option value="Medium">Medium</option>
+							<option value="High">High</option>
             </select>
           </div>
           <div className="flex justify-end">
             <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700">
-              Mettre à jour la tâche
+              update
             </button>
             <button type="button" className="ml-2 text-gray-500" onClick={onClose}>
-              Annuler
+              cancel
             </button>
           </div>
         </form>

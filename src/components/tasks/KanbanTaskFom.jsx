@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Datepicker } from 'flowbite-react';
+import { Datepicker, TextInput } from 'flowbite-react';
 import { addTask } from '../../services/api/tasks/Task';
 
 const KanbanTaskFom = ({ isOpen, onClose, loadTasks }) => {
@@ -69,19 +69,21 @@ const KanbanTaskFom = ({ isOpen, onClose, loadTasks }) => {
 						required
 					></textarea>
 					</div>
+
 					<div className="mb-4">
-					<label htmlFor="deadline" className="block text-sm font-medium text-gray-600">
-						Deadline:
-					</label>
-					<Datepicker
-						id="deadline"
-						name="deadline"
-						onChange={handleInputChange}
-						className="mt-1 rounded-md w-full"
-						defaultValue={new Date()}
-						// Add necessary props for date picking, such as onChange
-					/>
-					</div>
+                		<label htmlFor="deadline" className="block text-sm font-medium text-gray-600">
+                    		Dead:
+                		</label>
+						<TextInput
+							type="date"
+							id="deadline"
+							name="deadline"
+							value={formData.deadline}  
+							onChange={handleInputChange}  
+							className="mt-1 rounded-md w-full"
+						/>
+            		</div>
+
 					<div className="mb-4">
 						<label htmlFor="priority" className="block text-sm font-medium text-gray-600">
 						Priority:
