@@ -30,7 +30,6 @@ export const changeStatusById = async (taskId) => {
     console.error("Erreur lors de la suppression de la tâche :", error.message);
     throw error;
   }
-
 }
 
 export const addTask = async (taskData) => {
