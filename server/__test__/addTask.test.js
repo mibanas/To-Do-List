@@ -1,4 +1,4 @@
-const TaskController = require('../controllers/taskController');
+const TaskController = require('../controllers/');
 const modelTask = require('../models/taskModel');
 
 jest.mock('../models/taskModel');
