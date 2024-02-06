@@ -21,13 +21,15 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.21.3",
     "react-scripts": "5.0.1",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.0",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
     "dev:back": "nodemon ./server/server.js",
     "dev:front": "react-scripts start ",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "jest",
     "eject": "react-scripts eject",
     "dev": "concurrently \"npm run dev:back\" \"npm run dev:front\""
   },
@@ -50,8 +52,12 @@
     ]
   },
   "devDependencies": {
+    "@babel/core": "^7.23.9",
+    "@babel/preset-env": "^7.23.9",
+    "@babel/preset-react": "^7.23.3",
     "concurrently": "^8.2.2",
     "dotenv": "^16.4.1",
+    "jest": "^27.5.1",
     "nodemon": "^3.0.3",
     "tailwindcss": "^3.4.1"
   }
