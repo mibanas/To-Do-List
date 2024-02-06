@@ -1,3 +1,4 @@
+// Import des fonctions de gestion des tâches
 const { addTask, updateTask, changeTaskStatus, deleteTask } = require('./taskDocs');
 
 // Définition de la documentation de l'API
@@ -25,47 +26,11 @@ const apiDocumentation = {
   ],
   tags: [
     {
-      name: 'Courses',
+      name: 'Tasks',
     },
   ],
   paths: {
-    '/courses': {
-      get: getAllCourses,
-      post: addCourse,
-      tags: ['Courses'],
-      summary: 'Get all courses',
-      operationId: 'getAllCourses',
-      responses: {
-        '200': {
-          description: 'Courses retrieved successfully!',
-        },
-      },
-    },
-    '/courses/{id}': {
-      get: getCourseById,
-      put: updateCourse,
-      delete: deleteCourse,
-      tags: ['Courses'],
-      summary: 'Get course by ID, update course, delete course',
-      operationId: 'getUpdateDeleteCourse',
-      parameters: [
-        {
-          name: 'id',
-          in: 'path',
-          description: 'ID of the course',
-          required: true,
-          schema: {
-            type: 'string',
-          },
-        },
-      ],
-      responses: {
-        '200': {
-          description: 'Course retrieved/updated/deleted successfully!',
-        },
-      },
-    },
-    '/tasks': {
+    '/tasks/addtask': {
       post: addTask,
       tags: ['Tasks'],
       summary: 'Add a new task',
@@ -76,7 +41,7 @@ const apiDocumentation = {
         },
       },
     },
-    '/tasks/{id}': {
+    '/tasks/updatetask/{id}': {
       put: updateTask,
       delete: deleteTask,
       tags: ['Tasks'],
@@ -99,27 +64,56 @@ const apiDocumentation = {
         },
       },
     },
+    '/tasks/{id}': {
+      put: changeTaskStatus,
+      tags: ['Tasks'],
+      summary: 'Change task status by ID',
+      operationId: 'changeTaskStatus',
+      parameters: [
+        {
+          name: 'id',
+          in: 'path',
+          description: 'ID of the task',
+          required: true,
+          schema: {
+            type: 'string',
+          },
+        },
+      ],
+      responses: {
+        '200': {
+          description: 'Task status changed successfully!',
+        },
+        '404': {
+          description: 'Task not found',
+        },
+        '500': {
+          description: 'Internal Server Error',
+        },
+      },
+    },
   },
   components: {
     schemas: {
-      Course: {
+      TaskInput: {
+        type: 'object',
+        properties: {
+          title: { type: 'string' },
+          description: { type: 'string' },
+          priority: { type: 'string' },
+          deadline: { type: 'string', format: 'date' },
+        },
+        required: ['title', 'description', 'priority', 'deadline'],
+      },
+      Task: {
         type: 'object',
         properties: {
           _id: { type: 'string' },
-          courseName: { type: 'string' },
-          courseImage: { type: 'string' },
+          title: { type: 'string' },
+          description: { type: 'string' },
+          priority: { type: 'string' },
+          deadline: { type: 'string', format: 'date' },
         },
-      },
-      User: {
-        type: 'object',
-        properties: {
-          userName: { type: 'string' },
-          password: { type: 'string' },
-          completName: { type: 'string' },
-          email: { type: 'string' },
-          role: { type: 'string' },
-        },
-        required: ['userName', 'password', 'completName', 'email', 'role'],
       },
     },
     securitySchemes: {
@@ -132,4 +126,5 @@ const apiDocumentation = {
   },
 };
 
-export { apiDocumentation };
+// Export de la documentation de l'API
+module.exports = apiDocumentation;

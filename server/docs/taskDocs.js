@@ -18,14 +18,7 @@ const addTask = {
       content: {
         'application/json': {
           schema: {
-            type: 'object',
-            properties: {
-              title: { type: 'string' },
-              description: { type: 'string' },
-              priority: { type: 'string' },
-              deadline: { type: 'string', format: 'date' },
-            },
-            required: ['title', 'description', 'priority', 'deadline'],
+            $ref: '#/components/schemas/TaskInput',
           },
         },
       },
@@ -84,13 +77,7 @@ const updateTask = {
       content: {
         'application/json': {
           schema: {
-            type: 'object',
-            properties: {
-              title: { type: 'string' },
-              description: { type: 'string' },
-              priority: { type: 'string' },
-              deadline: { type: 'string', format: 'date' },
-            },
+            $ref: '#/components/schemas/TaskInput',
           },
         },
       },
@@ -140,7 +127,7 @@ const updateTask = {
         },
       },
     },
-  };
+};
 
 const changeTaskStatus = {
     tags: ['Tasks'],
@@ -202,7 +189,7 @@ const changeTaskStatus = {
         },
       },
     },
-  };
+};
 
 const deleteTask = {
     tags: ['Tasks'],
@@ -265,6 +252,6 @@ const deleteTask = {
         },
       },
     },
-  };
+};
 
-export { addTask, updateTask, changeTaskStatus, deleteTask };
+module.exports = { addTask, updateTask, changeTaskStatus, deleteTask };
