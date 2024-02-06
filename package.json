@@ -50,6 +50,9 @@
     ]
   },
   "devDependencies": {
+    "@babel/core": "^7.23.9",
+    "@babel/preset-env": "^7.23.9",
+    "@babel/preset-react": "^7.23.3",
     "concurrently": "^8.2.2",
     "dotenv": "^16.4.1",
     "jest": "^27.5.1",
