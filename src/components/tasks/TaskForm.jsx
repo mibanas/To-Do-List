@@ -1,128 +1,137 @@
-import React from "react";
-import {
-  Button,
-  Label,
-  Modal,
-  TextInput,
-  Textarea,
-  Select,
-  Datepicker,
-} from "flowbite-react";
-import { useState } from "react";
+import React, { useState } from "react";
+import { Datepicker } from "flowbite-react";
 import { addTask } from "../../services/api/tasks/Task";
 
-function TaskForm({ loadTasks }) {
-  const [openModal, setOpenModal] = useState(false);
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [priority, setPriority] = useState("Low");
-  const [deadline, setDeadline] = useState(new Date());
+const TaskForm = ({ isOpen, onClose, loadTasks }) => {
+  const [formData, setFormData] = useState({
+    title: "",
+    description: "",
+    deadline: new Date(),
+    priority: "Low",
+  });
 
-  const onCloseModal = () => {
-    setOpenModal(false);
-    setTitle("");
-    setDescription("");
-    setPriority("Low");
-    setDeadline(new Date());
+  if (!isOpen) return null;
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setFormData({ ...formData, [name]: value });
   };
 
-  const handleAddTask = async () => {
-    try {
-      await addTask({
-        title: title,
-        description: description,
-        priority: priority,
-        deadline: deadline.toISOString(),
-      });
+  const handleFormSubmit = async (event) => {
+    event.preventDefault();
 
-      loadTasks();
-      onCloseModal();
-    } catch (error) {
-      console.error("Error adding task:", error.message);
-      if (error.response) {
-        // The request was made and the server responded with a status code
-        console.error("Response data:", error.response.data);
-        console.error("Response status:", error.response.status);
-        console.error("Response headers:", error.response.headers);
-      } else if (error.request) {
-        // The request was made but no response was received
-        console.error("No response received:", error.request);
+    try {
+      const response = await addTask(formData);
+
+      if (response.success) {
+        console.log("Tâche ajoutée avec succès :", response.data);
+        onClose();
+        await loadTasks();
       } else {
-        // Something happened in setting up the request that triggered an Error
-        console.error("Request setup error:", error.message);
+        console.error("Erreur lors de l'ajout de la tâche :", response.error);
       }
+    } catch (error) {
+      console.error("Erreur lors de la requête POST :", error);
     }
   };
 
   return (
-    <>
-      <Button
-        className="bg-gray-800 dark:bg-gray-100 text-white dark:text-gray-100 font-bold py-2 px-4 border border-gray-700 dark:border-gray-600 rounded"
-        onClick={() => setOpenModal(true)}
-      >
-        New Task
-      </Button>
-      <Modal show={openModal} size="md" onClose={onCloseModal} popup>
-        <Modal.Header />
-        <Modal.Body>
-          <div className="space-y-6">
-            <h3 className="text-xl font-medium text-gray-900 dark:text-white">
-              Add New Task
-            </h3>
-            <div>
-              <div className="mb-2 block">
-                <Label value="Title" />
-              </div>
-              <TextInput
-                id="title"
-                value={title}
-                onChange={(event) => setTitle(event.target.value)}
-                required
-              />
-            </div>
-            <div>
-              <div className="mb-2 block">
-                <Label htmlFor="text" value="Description" />
-              </div>
-              <Textarea
-                id="description"
-                value={description}
-                onChange={(event) => setDescription(event.target.value)}
-                type="text"
-                required
-              />
-            </div>
-            <div className="max-w-md">
-              <div className="mb-2 block">
-                <Label htmlFor="priority" value="Priority" />
-              </div>
-              <Select
-                id="priority"
-                value={priority}
-                onChange={(event) => setPriority(event.target.value)}
-                required
-              >
-                <option>Low</option>
-                <option>Medium</option>
-                <option>High</option>
-              </Select>
-            </div>{" "}
-            <div className="mb-2 block">
-              <Label htmlFor="date" value="Duree" />
-            </div>
+    <div
+      className={`fixed inset-0 flex items-center justify-center ${
+        isOpen ? "" : "hidden"
+      }`}
+    >
+      <div className="bg-black opacity-50 fixed inset-0"></div>
+      <div className="bg-white p-6 rounded-xl shadow-md z-10 w-5/12">
+        <h2 className="text-2xl mb-4">Add Task</h2>
+        <form onSubmit={handleFormSubmit}>
+          <div className="mb-4">
+            <label
+              htmlFor="title"
+              className="block text-sm font-medium text-gray-600"
+            >
+              Title:
+            </label>
+            <input
+              type="text"
+              id="title"
+              onChange={handleInputChange}
+              name="title"
+              className="mt-1 p-2 border rounded-md w-full"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label
+              htmlFor="description"
+              className="block text-sm font-medium text-gray-600"
+            >
+              Description:
+            </label>
+            <textarea
+              id="description"
+              name="description"
+              onChange={handleInputChange}
+              rows="3"
+              className="mt-1 p-2 border rounded-md w-full"
+              required
+            ></textarea>
+          </div>
+          <div className="mb-4">
+            <label
+              htmlFor="deadline"
+              className="block text-sm font-medium text-gray-600"
+            >
+              Deadline:
+            </label>
             <Datepicker
               id="deadline"
-              selected={deadline}
-              onChange={(date) => setDeadline(date)}
+              name="deadline"
+              onChange={handleInputChange}
+              className="mt-1 rounded-md w-full"
+              value={formData.deadline}
+              defaultValue={new Date()}
+              // Add necessary props for date picking, such as onChange
             />
-            <div className="w-full">
-              <Button onClick={handleAddTask}>Add</Button>
-            </div>
           </div>
-        </Modal.Body>
-      </Modal>
-    </>
+          <div className="mb-4">
+            <label
+              htmlFor="priority"
+              className="block text-sm font-medium text-gray-600"
+            >
+              Priority:
+            </label>
+            <select
+              id="priority"
+              name="priority"
+              className="mt-1 p-2 border rounded-md w-full"
+              value={formData.priority}
+              onChange={handleInputChange}
+            >
+              <option value="Low">Low</option>
+              <option value="Medium">Medium</option>
+              <option value="High">High</option>
+            </select>
+          </div>
+          <div className="flex justify-end">
+            <button
+              type="submit"
+              className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700"
+            >
+              Add Task
+            </button>
+            <button
+              type="button"
+              className="ml-2 text-gray-500"
+              onClick={onClose}
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
   );
-}
+};
 
 export default TaskForm;

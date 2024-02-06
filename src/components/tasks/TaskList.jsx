@@ -2,13 +2,23 @@ import React from "react";
 import { Button, Modal, Table } from "flowbite-react";
 import { useState } from "react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
-import useTask from "../../hooks/tasks/useTask";
-import { deleteTaskById, addTask } from "../../services/api/tasks/Task";
+import {
+  deleteTaskById,
+  changeStatusById,
+} from "../../services/api/tasks/Task";
+import KanbanUpdateTask from "./KanbanUpdateTask";
 
-function TaskList() {
+function TaskList({ loadTasks, allTasks }) {
   const [openModal, setOpenModal] = useState(false);
-  const { tasks, loadTasks } = useTask();
+  // const { tasks, loadTasks } = useTask();
   const [taskIdToDelete, setTaskIdToDelete] = useState(null);
+  const [openPopUps, setOpenPopUps] = useState({});
+
+  const togglePopUp = (taskId) => {
+    setOpenPopUps((prev) => ({ ...prev, [taskId]: !prev[taskId] }));
+  };
+
+  const tasks = allTasks;
 
   const handleDeleteTask = async () => {
     try {
@@ -17,6 +27,14 @@ function TaskList() {
         loadTasks();
         setOpenModal(false);
       }
+    } catch (error) {
+      console.error("Error deleting task:", error.message);
+    }
+  };
+  const handleChangeStatus = async (taskId) => {
+    try {
+      await changeStatusById(taskId);
+      loadTasks();
     } catch (error) {
       console.error("Error deleting task:", error.message);
     }
@@ -40,7 +58,6 @@ function TaskList() {
           </Table.Head>
           <Table.Body className="divide-y text-center">
             {tasks.map((task) => (
-              
               <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
                 <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                   {task.title}
@@ -49,24 +66,35 @@ function TaskList() {
                 <Table.Cell>{task.task_status}</Table.Cell>
                 <Table.Cell>{task.priority}</Table.Cell>
                 <Table.Cell className="flex ml-10">
-                  <Button className="bg-inherit">
-                    <svg
-                      className="w-6 h-6 text-gray-800 dark:text-white"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
+                  {task.task_status !== "Done" ? (
+                    <Button
+                      className="bg-inherit"
+                      onClick={() => handleChangeStatus(task._id)}
                     >
-                      <path
-                        stroke="currentColor"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M8 18V6l8 6-8 6Z"
-                      />
-                    </svg>
-                  </Button>
-                  <Button className="bg-inherit">
+                      <svg
+                        className="w-6 h-6 text-gray-800 dark:text-white"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M8 18V6l8 6-8 6Z"
+                        />
+                      </svg>
+                    </Button>
+                  ) : (
+                    <Button className="invisible w-16">done</Button>
+                  )}
+
+                  <Button
+                    className="bg-inherit"
+                    onClick={() => togglePopUp(task._id)}
+                  >
                     <svg
                       className="w-6 h-6 text-sky-500 dark:text-white"
                       aria-hidden="true"
@@ -108,6 +136,12 @@ function TaskList() {
                       />
                     </svg>
                   </Button>
+                  <KanbanUpdateTask
+                    isOpen={openPopUps[task._id]}
+                    onClose={() => togglePopUp(task._id)}
+                    loadTasks={loadTasks}
+                    selectedTask={task}
+                  />
                   <Modal
                     show={openModal}
                     size="md"
